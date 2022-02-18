@@ -2,7 +2,9 @@
 
 source progress_bar.sh
 
-progress_init 2 
+PROGRESS_BAR_ACCENT=4
+
+progress_init 2
 
 echo "Welcome"
 
