@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-COLOR_ACCENT=7
+PROGRESS_ACCENT=${PROGRESS_ACCENT:-7}
 
 PROGRESS_BAR_LINES=2
 PROGRESS_BAR_FILLED='#'
@@ -20,7 +20,7 @@ then
 		PROGRESS_SCROLL_LINES=$((PROGRESS_LINES - PROGRESS_BAR_LINES))
 
 		# Scroll one line to avoid visual glitch when shrinking by one row
-		echo
+		tput cud1
 
 		# Save cursor position
 		tput sc
@@ -32,7 +32,7 @@ then
 		tput rc
 
 		# Move the cursor up into the scroll-region
-		tput cup "$((PROGRESS_SCROLL_LINES - 1))" 0
+		tput cuu1
 
 		progress_bar
 	}
@@ -138,8 +138,8 @@ then
 	{
 		progress_destroy_scroll
 
-		unset PROGRESS_TOTAL
-		unset PROGRESS_CURR
+		unset PROGRESS_TOTAL PROGRESS_CURR
+		unset PROGRESS_LINES PROGRESS_SCROLL_LINES
 	}
 
 	progress() # [step_name]
@@ -173,22 +173,3 @@ else
 		[ "$PROGRESS_CURR" -lt "$PROGRESS_TOTAL" ] && ((PROGRESS_CURR += 1))
 	}
 fi
-
-progress_init 2
-
-echo "Welcome"
-
-progress test
-echo "Sleeping 2 seconds..."
-sleep 2
-
-progress test2
-echo "Sleeping 3 seconds..."
-sleep 3
-
-progress "Done!"
-sleep 1
-
-progress_destroy
-
-echo EOF 
