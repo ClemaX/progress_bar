@@ -70,7 +70,7 @@ then
 	# shellcheck disable=SC2120
 	progress_bar() # [step_name]
 	{
-		local step_name="${1:-$PROGRESS_CURR_NAME}"
+		local step_name="${1:-${PROGRESS_CURR_NAME:-}}"
 		local columns
 		
 		columns=$(tput cols)
@@ -128,8 +128,8 @@ then
 
 	progress_init() # step_count
 	{
-		PROGRESS_TOTAL="$1"
-		PROGRESS_CURR=0
+		PROGRESS_TOTAL="$1" PROGRESS_CURR=0
+		PROGRESS_CURR_NAME=
 
 		# Initialize parameters
 		local progress_max="$PROGRESS_TOTAL/$PROGRESS_TOTAL"
@@ -185,7 +185,7 @@ else
 	progress() # [step_name] 
 	{
 		echo -n "$PROGRESS_CURR/$PROGRESS_TOTAL"
-		[ -z "${1:-}" ] && echo || echo ": $1"
+		[ -z "${1:-${PROGRESS_CURR_NAME:-}}" ] && echo || echo ": $1"
 
 		[ "$PROGRESS_CURR" -lt "$PROGRESS_TOTAL" ] && ((PROGRESS_CURR += 1))
 	}
